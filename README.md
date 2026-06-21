@@ -9,7 +9,7 @@ The app lets you create books and save quotes, notes, pages and tags under each 
 Production URL:
 
 ```text
-https://kitap-alinti-reading-notes.netlify.app
+https://kitapnot.netlify.app
 ```
 
 Open this URL on desktop or mobile. No local server or same-Wi-Fi setup is required for normal use.
@@ -97,7 +97,7 @@ For production, also add your Cloudflare Pages domain.
 For the current Netlify deployment, add this authorized JavaScript origin:
 
 ```text
-https://kitap-alinti-reading-notes.netlify.app
+https://kitapnot.netlify.app
 ```
 
 Then add the same client id in Netlify:
@@ -145,7 +145,7 @@ Known limitation: this is backup/restore only. There is no real-time multi-devic
 The project is deployed on Netlify:
 
 ```text
-https://kitap-alinti-reading-notes.netlify.app
+https://kitapnot.netlify.app
 ```
 
 Config file:
@@ -182,3 +182,4 @@ VITE_GOOGLE_CLIENT_ID
 ```
 
 Also add the Cloudflare Pages URL to the Google OAuth client's authorized JavaScript origins.
+
