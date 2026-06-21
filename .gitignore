@@ -30,3 +30,6 @@ coverage/
 
 # PWA generated files
 dev-dist/
+
+# Local Netlify folder
+.netlify

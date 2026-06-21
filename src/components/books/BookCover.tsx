@@ -18,7 +18,7 @@ export function BookCover({ title, author, size = "sm" }: BookCoverProps) {
   return (
     <div
       className={cn(
-        "relative flex shrink-0 flex-col justify-between overflow-hidden rounded-md border bg-[#dfe0ff] p-3 text-[#121c2c] shadow-soft",
+        "relative flex shrink-0 flex-col justify-between overflow-hidden rounded-md border bg-[#dfeee4] p-3 text-[#121c2c] shadow-soft",
         size === "sm" ? "h-24 w-16" : "h-52 w-36 p-4"
       )}
       aria-hidden="true"

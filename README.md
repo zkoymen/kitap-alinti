@@ -4,6 +4,16 @@ Production-ready MVP for a local-first personal reading notes PWA.
 
 The app lets you create books and save quotes, notes, pages and tags under each book. It works without login and stores data locally in IndexedDB. Google Drive is optional and only used for manual backup and restore.
 
+## Live App
+
+Production URL:
+
+```text
+https://kitap-alinti-reading-notes.netlify.app
+```
+
+Open this URL on desktop or mobile. No local server or same-Wi-Fi setup is required for normal use.
+
 ## Stack
 
 - React
@@ -36,9 +46,11 @@ Open on desktop:
 http://localhost:5173/
 ```
 
-## Open On Mobile
+## Open On Mobile During Development
 
-Keep the dev server running. Vite prints a network URL like:
+For the deployed app, use the production URL above.
+
+Only during local development, keep the dev server running. Vite prints a network URL like:
 
 ```text
 http://192.168.1.6:5173/
@@ -82,6 +94,20 @@ http://localhost:5173
 
 For production, also add your Cloudflare Pages domain.
 
+For the current Netlify deployment, add this authorized JavaScript origin:
+
+```text
+https://kitap-alinti-reading-notes.netlify.app
+```
+
+Then add the same client id in Netlify:
+
+```text
+Project configuration -> Environment variables -> VITE_GOOGLE_CLIENT_ID
+```
+
+Because Vite reads environment variables at build time, redeploy after adding or changing the value.
+
 The app requests only this scope:
 
 ```text
@@ -113,6 +139,27 @@ reading-notes-backup.json
 Restore replaces local IndexedDB data after confirmation.
 
 Known limitation: this is backup/restore only. There is no real-time multi-device sync or conflict resolution engine.
+
+## Netlify Deploy
+
+The project is deployed on Netlify:
+
+```text
+https://kitap-alinti-reading-notes.netlify.app
+```
+
+Config file:
+
+```text
+netlify.toml
+```
+
+Manual production deploy from this machine:
+
+```bash
+npm run build
+netlify deploy --prod --dir dist
+```
 
 ## Cloudflare Pages Deploy
 
