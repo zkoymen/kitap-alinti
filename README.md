@@ -1,59 +1,98 @@
 # Reading Notes PWA
 
-Local-first personal reading notes PWA.
+Production-ready MVP for a local-first personal reading notes PWA.
 
-This project will be built as a production-ready MVP with:
+The app lets you create books and save quotes, notes, pages and tags under each book. It works without login and stores data locally in IndexedDB. Google Drive is optional and only used for manual backup and restore.
+
+## Stack
 
 - React
 - Vite
 - TypeScript
 - Tailwind CSS
-- shadcn/ui
+- shadcn/ui-style local components
 - Dexie.js / IndexedDB
 - React Router
 - vite-plugin-pwa
-- Optional Google Drive backup through `appDataFolder`
-- Static deployment support for Cloudflare Pages
+- Google Identity Services + Google Drive API `appDataFolder`
 
-## Product Scope
+## Local Development
 
-The app lets a user create books and save quotes or notes under each book. It must work offline after the first load and must not require login for normal usage.
+Install dependencies:
 
-Google login is only used for optional backup and restore.
+```bash
+npm install
+```
 
-## Planned Routes
+Start the dev server:
 
-- `/books` - book list, search, create/edit/delete books
-- `/books/:bookId` - quote list for one book, create/edit/delete quotes
-- `/settings` - export/import JSON, Google Drive backup/restore, local storage status
+```bash
+npm run dev
+```
 
-## Data Model
+Open on desktop:
 
-### Book
+```text
+http://localhost:5173/
+```
 
-- `id: string`
-- `title: string`
-- `author?: string`
-- `createdAt: string`
-- `updatedAt: string`
+## Open On Mobile
 
-### Quote
+Keep the dev server running. Vite prints a network URL like:
 
-- `id: string`
-- `bookId: string`
-- `text: string`
-- `note?: string`
-- `page?: string`
-- `tags?: string[]`
-- `createdAt: string`
-- `updatedAt: string`
+```text
+http://192.168.1.6:5173/
+```
 
-### AppMeta
+On your phone:
 
-- `key: string`
-- `value: unknown`
+1. Connect to the same Wi-Fi as this computer.
+2. Open the printed `http://192.168.x.x:5173/` address in the mobile browser.
+3. For install-like PWA behavior, use the browser menu and choose Add to Home Screen.
 
-## Export Format
+If the phone cannot open it, check Windows Firewall and allow Node.js/Vite on private networks.
+
+## Build
+
+```bash
+npm run build
+```
+
+Preview the production build:
+
+```bash
+npm run preview
+```
+
+## Google OAuth Setup
+
+Create a Google OAuth Web client and set:
+
+```env
+VITE_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+```
+
+Use `.env.local` for local development. Do not commit real secrets.
+
+Authorized JavaScript origins should include:
+
+```text
+http://localhost:5173
+```
+
+For production, also add your Cloudflare Pages domain.
+
+The app requests only this scope:
+
+```text
+https://www.googleapis.com/auth/drive.appdata
+```
+
+## Backup And Restore
+
+Local data is stored in IndexedDB and works offline after the app shell is cached.
+
+Export downloads JSON in this format:
 
 ```json
 {
@@ -65,17 +104,34 @@ Google login is only used for optional backup and restore.
 }
 ```
 
-## Google Drive Backup
+Google Drive backup writes one file to the app data folder:
 
-The Drive integration will use:
+```text
+reading-notes-backup.json
+```
 
-- Google Identity Services
-- Scope: `https://www.googleapis.com/auth/drive.appdata`
-- Environment variable: `VITE_GOOGLE_CLIENT_ID`
-- File name in appDataFolder: `reading-notes-backup.json`
+Restore replaces local IndexedDB data after confirmation.
 
-Access tokens should stay in memory where possible.
+Known limitation: this is backup/restore only. There is no real-time multi-device sync or conflict resolution engine.
 
-## Status
+## Cloudflare Pages Deploy
 
-Project scaffolding has not started yet. The next implementation step is to add the app codebase and then integrate the Google Stitch UI when provided.
+Build command:
+
+```bash
+npm run build
+```
+
+Output directory:
+
+```text
+dist
+```
+
+Set the production environment variable in Cloudflare Pages:
+
+```text
+VITE_GOOGLE_CLIENT_ID
+```
+
+Also add the Cloudflare Pages URL to the Google OAuth client's authorized JavaScript origins.
