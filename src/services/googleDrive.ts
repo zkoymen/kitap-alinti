@@ -1,4 +1,5 @@
 import type { BackupExport } from "@/types";
+import { createId } from "@/lib/id";
 
 const GIS_SRC = "https://accounts.google.com/gsi/client";
 const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.appdata";
@@ -18,6 +19,27 @@ interface DriveFile {
   id: string;
   name: string;
   modifiedTime?: string;
+}
+
+interface GoogleApiError {
+  code?: number;
+  message?: string;
+  status?: string;
+  errors?: Array<{
+    message?: string;
+    domain?: string;
+    reason?: string;
+  }>;
+  details?: Array<{
+    reason?: string;
+    metadata?: {
+      activationUrl?: string;
+      consumer?: string;
+      containerInfo?: string;
+      service?: string;
+      serviceTitle?: string;
+    };
+  }>;
 }
 
 declare global {
@@ -141,6 +163,75 @@ async function ensureAccessToken() {
   return accessToken;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function parseJson(text: string) {
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    return null;
+  }
+}
+
+function getGoogleApiError(value: unknown): GoogleApiError | null {
+  if (!isRecord(value) || !isRecord(value.error)) return null;
+  return value.error as GoogleApiError;
+}
+
+function getProjectId(error: GoogleApiError) {
+  const details = error.details ?? [];
+  const metadata = details.map((detail) => detail.metadata).find(Boolean);
+  const consumer = metadata?.consumer?.replace(/^projects\//, "");
+  if (consumer) return consumer;
+
+  const containerInfo = metadata?.containerInfo;
+  if (containerInfo) return containerInfo;
+
+  const projectMatch = error.message?.match(/project\s+(\d+)/i);
+  return projectMatch?.[1];
+}
+
+function formatGoogleDriveError(status: number, bodyText: string, fallback: string) {
+  const apiError = getGoogleApiError(parseJson(bodyText));
+  if (!apiError) {
+    return bodyText || fallback;
+  }
+
+  const reasons = [
+    apiError.status,
+    ...(apiError.errors?.map((error) => error.reason) ?? []),
+    ...(apiError.details?.map((detail) => detail.reason) ?? [])
+  ].filter(Boolean);
+  const disabled =
+    status === 403 &&
+    (reasons.includes("SERVICE_DISABLED") ||
+      reasons.includes("accessNotConfigured") ||
+      apiError.message?.includes("has not been used") ||
+      apiError.message?.includes("is disabled"));
+
+  if (disabled) {
+    const projectId = getProjectId(apiError);
+    return [
+      `Google Drive API is disabled${projectId ? ` for Google Cloud project ${projectId}` : ""}.`,
+      "Enable Google Drive API in Google Cloud Console, wait a few minutes, then try again."
+    ].join(" ");
+  }
+
+  if (status === 401) {
+    return "Google Drive authorization expired. Disconnect, connect again, then retry.";
+  }
+
+  const message = apiError.message || fallback;
+  return `Google Drive API ${apiError.code ?? status}: ${message}`;
+}
+
+async function throwGoogleDriveError(response: Response, fallback: string): Promise<never> {
+  const bodyText = await response.text();
+  throw new Error(formatGoogleDriveError(response.status, bodyText, fallback));
+}
+
 async function driveFetch<T>(url: string, init?: RequestInit): Promise<T> {
   const token = await ensureAccessToken();
   const response = await fetch(url, {
@@ -152,8 +243,7 @@ async function driveFetch<T>(url: string, init?: RequestInit): Promise<T> {
   });
 
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `Google Drive request failed with ${response.status}.`);
+    await throwGoogleDriveError(response, `Google Drive request failed with ${response.status}.`);
   }
 
   return response.json() as Promise<T>;
@@ -169,7 +259,7 @@ async function findBackupFile(): Promise<DriveFile | null> {
 }
 
 function createMultipartBody(metadata: Record<string, unknown>, data: BackupExport) {
-  const boundary = `reading-notes-${crypto.randomUUID()}`;
+  const boundary = `reading-notes-${createId()}`;
   const body = [
     `--${boundary}`,
     "Content-Type: application/json; charset=UTF-8",
@@ -219,7 +309,7 @@ export async function downloadBackupFromDrive() {
   });
 
   if (!response.ok) {
-    throw new Error("Could not download the Google Drive backup.");
+    await throwGoogleDriveError(response, "Could not download the Google Drive backup.");
   }
 
   return response.json() as Promise<BackupExport>;

@@ -17,6 +17,7 @@ interface QuoteFormDialogProps {
   open: boolean;
   quote?: Quote | null;
   bookTitle: string;
+  initialText?: string;
   busy?: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (input: { text: string; note?: string; page?: string; tags?: string[] }) => Promise<void>;
@@ -26,6 +27,7 @@ export function QuoteFormDialog({
   open,
   quote,
   bookTitle,
+  initialText,
   busy,
   onOpenChange,
   onSubmit
@@ -38,11 +40,11 @@ export function QuoteFormDialog({
   useEffect(() => {
     if (!open) return;
 
-    setText(quote?.text ?? "");
+    setText(quote?.text ?? initialText ?? "");
     setNote(quote?.note ?? "");
     setPage(quote?.page ?? "");
     setTags(tagsToInput(quote?.tags));
-  }, [open, quote]);
+  }, [open, quote, initialText]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

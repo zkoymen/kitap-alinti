@@ -1,8 +1,9 @@
-import { ArrowLeft, Edit3, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowLeft, Camera, Edit3, Plus, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { BookCover } from "@/components/books/BookCover";
+import { PhotoOcrDialog } from "@/components/quotes/PhotoOcrDialog";
 import { QuoteFormDialog } from "@/components/quotes/QuoteFormDialog";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { Badge } from "@/components/ui/badge";
@@ -20,11 +21,14 @@ import type { Book, Quote } from "@/types";
 export function BookDetailPage() {
   const { bookId } = useParams<{ bookId: string }>();
   const navigate = useNavigate();
+  const photoInputRef = useRef<HTMLInputElement>(null);
   const [book, setBook] = useState<Book | null>(null);
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const [quoteDraftText, setQuoteDraftText] = useState("");
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [editingQuote, setEditingQuote] = useState<Quote | null>(null);
   const [deletingQuote, setDeletingQuote] = useState<Quote | null>(null);
 
@@ -52,6 +56,26 @@ export function BookDetailPage() {
 
   function openNewQuote() {
     setEditingQuote(null);
+    setQuoteDraftText("");
+    setFormOpen(true);
+  }
+
+  function handlePhotoSelected(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose a photo or image file.");
+      return;
+    }
+
+    setPhotoFile(file);
+  }
+
+  function handlePhotoTextExtracted(text: string) {
+    setEditingQuote(null);
+    setQuoteDraftText(text);
     setFormOpen(true);
   }
 
@@ -68,6 +92,7 @@ export function BookDetailPage() {
         toast.success("Quote saved.");
       }
 
+      setQuoteDraftText("");
       setFormOpen(false);
       await loadDetail();
     } catch (error) {
@@ -139,10 +164,29 @@ export function BookDetailPage() {
         </header>
 
         <div className="mb-8">
-          <Button onClick={openNewQuote} className="w-full sm:w-auto">
-            <Plus className="h-4 w-4" aria-hidden="true" />
-            Add entry
-          </Button>
+          <div className="grid gap-3 sm:flex sm:flex-wrap">
+            <Button onClick={openNewQuote} className="w-full sm:w-auto">
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              Add entry
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => photoInputRef.current?.click()}
+              className="w-full sm:w-auto"
+            >
+              <Camera className="h-4 w-4" aria-hidden="true" />
+              Add from photo
+            </Button>
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={handlePhotoSelected}
+            />
+          </div>
         </div>
 
         <div className="border-t">
@@ -225,9 +269,21 @@ export function BookDetailPage() {
         open={formOpen}
         quote={editingQuote}
         bookTitle={book.title}
+        initialText={quoteDraftText}
         busy={busy}
-        onOpenChange={setFormOpen}
+        onOpenChange={(open) => {
+          setFormOpen(open);
+          if (!open) setQuoteDraftText("");
+        }}
         onSubmit={handleSaveQuote}
+      />
+      <PhotoOcrDialog
+        open={Boolean(photoFile)}
+        file={photoFile}
+        onOpenChange={(open) => {
+          if (!open) setPhotoFile(null);
+        }}
+        onTextExtracted={handlePhotoTextExtracted}
       />
       <ConfirmDialog
         open={Boolean(deletingQuote)}

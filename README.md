@@ -100,6 +100,15 @@ For the current Netlify deployment, add this authorized JavaScript origin:
 https://kitapnot.netlify.app
 ```
 
+In the same Google Cloud project, enable this API:
+
+```text
+Google Drive API
+```
+
+If this API is disabled, backup and restore will fail with a 403 `SERVICE_DISABLED` /
+`accessNotConfigured` error even when Google sign-in succeeds.
+
 Then add the same client id in Netlify:
 
 ```text
@@ -139,6 +148,25 @@ reading-notes-backup.json
 Restore replaces local IndexedDB data after confirmation.
 
 Known limitation: this is backup/restore only. There is no real-time multi-device sync or conflict resolution engine.
+
+## Photo OCR Capture
+
+Book detail pages include `Add from photo` for mobile quote capture. The browser opens
+the camera/photo picker, lets the user crop the quote area and runs OCR locally with
+Tesseract.js/WebAssembly.
+
+Current OCR behavior:
+
+- Default language is Turkish.
+- Images are processed on-device; they are not sent to a cloud OCR API.
+- The cropped image is preprocessed before OCR with upscale, grayscale, contrast,
+  adaptive threshold and sharpening.
+- The Tesseract worker is cached for the current browser session so repeated captures
+  are faster after the first OCR load.
+- Extracted text is placed into the normal quote form for review and correction before
+  saving.
+
+OCR quality still depends on lighting, focus, page angle, text size and crop accuracy.
 
 ## Netlify Deploy
 

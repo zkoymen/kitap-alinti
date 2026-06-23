@@ -1,5 +1,6 @@
 import { db } from "@/db/db";
 import { nowIso } from "@/lib/dates";
+import { createId } from "@/lib/id";
 import { normalizeSearch } from "@/lib/utils";
 import type { AppMeta, Book, BookWithCount, Quote } from "@/types";
 
@@ -50,7 +51,7 @@ export async function getBook(bookId: string) {
 export async function createBook(input: Pick<Book, "title" | "author">) {
   const now = nowIso();
   const book: Book = {
-    id: crypto.randomUUID(),
+    id: createId(),
     title: input.title.trim(),
     author: input.author?.trim() || undefined,
     createdAt: now,
@@ -92,7 +93,7 @@ export async function createQuote(
 ) {
   const now = nowIso();
   const quote: Quote = {
-    id: crypto.randomUUID(),
+    id: createId(),
     bookId: input.bookId,
     text: input.text.trim(),
     note: input.note?.trim() || undefined,
