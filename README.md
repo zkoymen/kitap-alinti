@@ -168,6 +168,12 @@ Current OCR behavior:
 
 OCR quality still depends on lighting, focus, page angle, text size and crop accuracy.
 
+## Visual Design
+
+The app uses a rose scrapbook palette, generic patterned book covers and local doodle
+SVG assets under `src/assets/doodles/`. The doodle background is decorative,
+non-interactive and intentionally low contrast so reading and editing stay primary.
+
 ## Netlify Deploy
 
 The project is deployed on Netlify:
@@ -210,4 +216,3 @@ VITE_GOOGLE_CLIENT_ID
 ```
 
 Also add the Cloudflare Pages URL to the Google OAuth client's authorized JavaScript origins.
-

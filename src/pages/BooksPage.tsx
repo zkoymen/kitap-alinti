@@ -1,6 +1,7 @@
 import { Edit3, MoreHorizontal, Plus, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import sparkleUrl from "@/assets/doodles/sparkle.svg";
 import { toast } from "sonner";
 import { BookCover } from "@/components/books/BookCover";
 import { BookFormDialog } from "@/components/books/BookFormDialog";
@@ -15,7 +16,26 @@ import {
   updateBook
 } from "@/db/repositories";
 import { relativeDate } from "@/lib/dates";
+import { cn } from "@/lib/utils";
 import type { Book, BookWithCount } from "@/types";
+
+const cardStyles = [
+  {
+    background: "bg-[#FFF8F5]",
+    border: "border-l-[#D4537E]",
+    tape: "bg-[#F4C0D1]"
+  },
+  {
+    background: "bg-[#FEF0F5]",
+    border: "border-l-[#993556]",
+    tape: "bg-[#F9E4C8]"
+  },
+  {
+    background: "bg-[#FFF5F0]",
+    border: "border-l-[#F4C0D1]",
+    tape: "bg-[#FBEAF0]"
+  }
+] as const;
 
 export function BooksPage() {
   const [books, setBooks] = useState<BookWithCount[]>([]);
@@ -134,10 +154,31 @@ export function BooksPage() {
             )}
           </div>
         ) : (
-          <div className="divide-y rounded-lg border bg-card">
-            {books.map((book) => (
-              <article key={book.id} className="group flex gap-5 p-4 transition-colors hover:bg-muted">
-                <Link to={`/books/${book.id}`} className="flex min-w-0 flex-1 gap-5">
+          <div className="space-y-3">
+            {books.map((book, index) => {
+              const cardStyle = cardStyles[index % cardStyles.length];
+
+              return (
+              <article
+                key={book.id}
+                className={cn(
+                  "group relative flex gap-5 overflow-hidden rounded-lg border border-l-[3px] p-4 shadow-[0_8px_24px_rgba(60,32,48,0.06)] transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(212,83,126,0.18)]",
+                  cardStyle.background,
+                  cardStyle.border
+                )}
+              >
+                <span
+                  className={cn(
+                    "pointer-events-none absolute -top-2 left-12 h-7 w-24 -rotate-3 rounded-sm opacity-80 shadow-sm",
+                    cardStyle.tape
+                  )}
+                  aria-hidden="true"
+                />
+                <span
+                  className="pointer-events-none absolute inset-0 opacity-[0.22] [background-image:linear-gradient(rgba(212,83,126,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(212,83,126,0.12)_1px,transparent_1px)] [background-size:28px_28px]"
+                  aria-hidden="true"
+                />
+                <Link to={`/books/${book.id}`} className="relative z-10 flex min-w-0 flex-1 gap-5">
                   <BookCover title={book.title} author={book.author} />
                   <div className="min-w-0 flex-1 py-1">
                     <h2 className="truncate text-xl font-semibold">{book.title}</h2>
@@ -148,7 +189,7 @@ export function BooksPage() {
                     </div>
                   </div>
                 </Link>
-                <div className="flex flex-col items-end gap-2 sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100">
+                <div className="relative z-10 flex flex-col items-end gap-2 sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100">
                   <Button
                     variant="ghost"
                     size="icon"
@@ -171,18 +212,19 @@ export function BooksPage() {
                   <MoreHorizontal className="hidden h-4 w-4 text-muted-foreground sm:block" aria-hidden="true" />
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>
 
       <Button
         onClick={openNewBook}
-        className="fixed bottom-20 right-5 z-40 h-14 w-14 rounded-full shadow-soft sm:hidden"
+        className="fixed bottom-20 right-5 z-40 h-14 w-14 rounded-full bg-[#D4537E] shadow-[0_4px_20px_rgba(212,83,126,0.4)] hover:bg-[#993556] sm:hidden"
         size="icon"
         aria-label="New book"
       >
-        <Plus className="h-6 w-6" />
+        <img src={sparkleUrl} alt="" className="h-7 w-7 brightness-0 invert" aria-hidden="true" />
       </Button>
 
       <BookFormDialog
