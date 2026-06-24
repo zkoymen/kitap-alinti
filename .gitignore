@@ -33,3 +33,14 @@ dev-dist/
 
 # Local Netlify folder
 .netlify
+
+# Local/generated documentation artifacts
+docs/screenshots/
+docs/local/
+docs/private/
+docs/generated/
+
+# Temporary screenshots and browser profiles
+tmp-*.png
+*-shot.png
+.chrome-profile/

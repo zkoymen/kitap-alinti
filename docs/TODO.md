@@ -21,6 +21,8 @@
 - [x] Add low-opacity doodle background pattern.
 - [x] Add pastel scrapbook-style book cards with washi-tape accents and paper texture.
 - [x] Merge UI design optimization into `main` after review.
+- [x] Add mobile screenshots to README with public demo data.
+- [x] Ignore generated/local docs screenshot folders and private doc folders.
 - [x] Deploy to Netlify.
 - [x] Shorten Netlify URL to `https://kitapnot.netlify.app`.
 - [x] Configure `VITE_GOOGLE_CLIENT_ID` locally and in Netlify.
@@ -29,7 +31,7 @@
 ## Next
 
 - [ ] Test Google Drive connect/backup/restore on the live site with the configured OAuth client.
-- [ ] Confirm Google Drive API is enabled in Google Cloud project `315391209834`.
+- [ ] Confirm Google Drive API is enabled in the same Google Cloud project as the OAuth client.
 - [ ] If Google Cloud OAuth consent screen is still in Testing mode, add intended users as test users or publish the app.
 - [ ] Test OCR capture on mobile browser/PWA and confirm camera permission behavior.
 - [ ] Consider linking Netlify continuous deployment to GitHub so future pushes auto-deploy.

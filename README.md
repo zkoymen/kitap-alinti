@@ -14,6 +14,14 @@ https://kitapnot.netlify.app
 
 Open this URL on desktop or mobile. No local server or same-Wi-Fi setup is required for normal use.
 
+## Screenshots
+
+<p>
+  <img src="./public/readme/library-mobile.png" alt="Mobile library screen" width="240" />
+  <img src="./public/readme/book-detail-mobile.png" alt="Mobile book detail screen" width="240" />
+  <img src="./public/readme/settings-mobile.png" alt="Mobile settings and backup screen" width="240" />
+</p>
+
 ## Stack
 
 - React
@@ -122,6 +130,14 @@ The app requests only this scope:
 ```text
 https://www.googleapis.com/auth/drive.appdata
 ```
+
+## Privacy And Public Repo Notes
+
+- The app is static and has no backend database.
+- Reading data stays in the browser's IndexedDB unless the user explicitly exports, imports, backs up or restores.
+- Google Drive backup uses the hidden `appDataFolder` scope.
+- `.env.local`, Netlify state, build output and local generated docs/screenshots are ignored by git.
+- `VITE_GOOGLE_CLIENT_ID` is a browser OAuth client id, not a client secret.
 
 ## Backup And Restore
 

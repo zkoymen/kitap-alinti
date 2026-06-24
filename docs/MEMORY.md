@@ -3,10 +3,9 @@
 ## Current Status
 
 - Project: local-first personal reading notes PWA.
-- GitHub private repo: `zkoymen/kitap-alinti`
+- GitHub repo: `zkoymen/kitap-alinti`
 - Production URL: `https://kitapnot.netlify.app`
 - Netlify site name: `kitapnot`
-- Netlify site id: `b93fb640-751c-494b-bad3-1263737a796e`
 - Main branch: `main`
 - App is already deployed and live.
 
@@ -54,6 +53,8 @@ Backup model:
 - `netlify.toml`: Netlify build and SPA redirect config.
 - `.env.example`: public template for required env var.
 - `.env.local`: local-only ignored file; do not commit it.
+- `public/readme/`: intentionally committed public README screenshots.
+- `docs/screenshots/`, `docs/local/`, `docs/private/`, `docs/generated/`: ignored local/generated documentation folders.
 
 ## Environment Variables
 
@@ -181,5 +182,5 @@ Important constraints:
 
 - Do not delete `docs/MEMORY.md`.
 - Keep docs under `docs/` committed to GitHub.
-- Do not commit `.env.local`, `dist/`, `node_modules/` or `.netlify/`.
+- Do not commit `.env.local`, `dist/`, `node_modules/`, `.netlify/`, local docs folders, or generated screenshot scratch files.
 - After feature work, run a security sanity check before deployment: dependency audit, no committed secrets, least-permission browser/API scopes, and no unnecessary cloud/billing services.
