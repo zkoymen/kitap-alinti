@@ -13,6 +13,14 @@
 - [x] Configure PWA manifest and service worker generation.
 - [x] Integrate Stitch-inspired UI.
 - [x] Change primary theme from blue to calm green.
+- [x] Create `ui-design-optimization` branch for visual design experiments.
+- [x] Replace book-cover title initials with a generic book icon/pattern.
+- [x] Switch UI optimization branch theme from green to orchid/lilac.
+- [x] Import doodle SVG assets into `src/assets/doodles/`.
+- [x] Switch UI optimization branch to rose scrapbook palette `#D4537E`.
+- [x] Add low-opacity doodle background pattern.
+- [x] Add pastel scrapbook-style book cards with washi-tape accents and paper texture.
+- [x] Merge UI design optimization into `main` after review.
 - [x] Deploy to Netlify.
 - [x] Shorten Netlify URL to `https://kitapnot.netlify.app`.
 - [x] Configure `VITE_GOOGLE_CLIENT_ID` locally and in Netlify.

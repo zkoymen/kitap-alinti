@@ -111,12 +111,25 @@ netlify env:set VITE_GOOGLE_CLIENT_ID <client-id>
 
 Original Stitch UI direction was adapted into a minimal mobile-first notebook/library UI.
 
-Current brand color is green:
+Current brand color follows the rose scrapbook palette:
 
-- primary/theme color: `#2f6f4e`
-- earlier blue/indigo theme was intentionally removed.
+- primary/theme color: `#D4537E`
+- primary light: `#F4C0D1`
+- primary lighter: `#FBEAF0`
+- primary dark/active: `#993556`
+- page background: `#FFF8F5`
+- earlier green theme was replaced during the UI optimization pass.
 
-Keep the UI calm, reading-focused and card/list based. Avoid dashboards, social features and AI features.
+Keep the UI reading-focused and card/list based, with soft scrapbook-like polish. Avoid dashboards, social features and AI features.
+
+Book covers should use a generic cover pattern/icon, not title initials. The title remains readable in the list/detail text, so the cover can stay decorative and consistent.
+
+UI asset notes:
+
+- Doodle SVG assets live under `src/assets/doodles/`.
+- Current doodles: `book.svg`, `star.svg`, `heart.svg`, `bookmark.svg`, `pencil.svg`, `sparkle.svg`, `flower.svg`, `squiggle.svg`.
+- The global doodle background is intentionally low opacity and non-interactive.
+- Book list cards use pastel variation, washi-tape accents and subtle paper texture. There is no reading-status field yet, so avoid status-looking card icons.
 
 ## Deployment Notes
 

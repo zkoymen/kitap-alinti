@@ -13,7 +13,7 @@ export default defineConfig({
         name: "Reading Notes",
         short_name: "Notes",
         description: "Local-first personal reading notes.",
-        theme_color: "#2f6f4e",
+        theme_color: "#D4537E",
         background_color: "#fbf9f8",
         display: "standalone",
         start_url: "/books",

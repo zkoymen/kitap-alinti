@@ -4,25 +4,25 @@
 
 @layer base {
   :root {
-    --background: 24 43% 98%;
-    --foreground: 218 42% 12%;
+    --background: 20 100% 98%;
+    --foreground: 330 31% 18%;
     --card: 0 0% 100%;
-    --card-foreground: 218 42% 12%;
+    --card-foreground: 330 31% 18%;
     --popover: 0 0% 100%;
-    --popover-foreground: 218 42% 12%;
-    --primary: 145 40% 31%;
+    --popover-foreground: 330 31% 18%;
+    --primary: 339 60% 58%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 211 22% 38%;
+    --secondary: 339 49% 40%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 225 60% 97%;
-    --muted-foreground: 237 9% 30%;
-    --accent: 137 32% 91%;
-    --accent-foreground: 145 40% 24%;
+    --muted: 339 79% 96%;
+    --muted-foreground: 26 18% 46%;
+    --accent: 339 70% 85%;
+    --accent-foreground: 339 49% 40%;
     --destructive: 0 74% 42%;
     --destructive-foreground: 0 0% 100%;
-    --border: 231 22% 82%;
-    --input: 231 22% 82%;
-    --ring: 145 40% 31%;
+    --border: 336 38% 86%;
+    --input: 336 38% 86%;
+    --ring: 339 60% 58%;
     --radius: 0.75rem;
   }
 
@@ -35,9 +35,71 @@
     background: hsl(var(--background));
   }
 
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
   body {
     @apply min-h-screen bg-background text-foreground antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      url("./assets/doodles/heart.svg"),
+      url("./assets/doodles/star.svg"),
+      url("./assets/doodles/sparkle.svg"),
+      url("./assets/doodles/bookmark.svg"),
+      url("./assets/doodles/pencil.svg"),
+      url("./assets/doodles/flower.svg"),
+      url("./assets/doodles/book.svg"),
+      url("./assets/doodles/squiggle.svg");
+    background-repeat: no-repeat;
+    background-size:
+      86px 86px,
+      72px 72px,
+      68px 68px,
+      64px 64px,
+      70px 70px,
+      82px 82px,
+      92px 92px,
+      110px 110px;
+    background-position:
+      6% 18%,
+      18% 82%,
+      47% 12%,
+      76% 78%,
+      91% 34%,
+      11% 56%,
+      88% 13%,
+      55% 92%;
+    opacity: 0.12;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at center, rgba(212, 83, 126, 0.13) 1px, transparent 1.4px),
+      linear-gradient(rgba(212, 83, 126, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212, 83, 126, 0.04) 1px, transparent 1px);
+    background-size: 34px 34px, 96px 96px, 96px 96px;
+    opacity: 0.55;
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
   }
 
   button,
@@ -49,7 +111,7 @@
 
 @layer components {
   .notebook-lines {
-    background-image: linear-gradient(to bottom, transparent 31px, rgba(90, 103, 216, 0.11) 31px);
+    background-image: linear-gradient(to bottom, transparent 31px, rgba(212, 83, 126, 0.13) 31px);
     background-size: 100% 32px;
   }
 }
